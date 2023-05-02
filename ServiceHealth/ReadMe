@@ -1,0 +1,12 @@
+Azure Health Advisory - Announcements[Retainments]
+
+
+Azure Service Health - is a free service that provides personalized alerts and guidance when Azure service issues affect you. It can notify you, help you understand the impact of issues, and keep you updated as the issue resolves. It can also help you prepare for planned maintenance and changes that could affect the availability of your resources.
+
+Visit Azure Service Health to set up your alerts
+
+Programmatically two methods to get service retirements:
+
+Azure Service Health
+Using RSS feed for Azure Updates – RSS feed currently provides most of updates, but Azure Service Health will include more target and direct announcements for services used by your solution.
+Note Recommendation is that customers to leverage Azure Service Health which provides details on services that customers is using today, but also review RSS feed which will include more services.
