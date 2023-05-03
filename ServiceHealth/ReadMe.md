@@ -71,7 +71,7 @@ KQL Query without date parameter
     on subscriptionId
     | summarize by Retirement_Date=format_datetime(impactMitigationTime,'yyyy-dd-MM'),Subscription_ID=subscriptionId,Subscription_Name=name,Impacted_Service=tostring(ImpactedService),Description=tostring(description),Properties=tostring(properties),Tracking_ID=tostring(trackingId)  
 
-![Sample screenshot of retirements](/ServiceHealth/retirements.png))
+![Sample screenshot of retirements](/ServiceHealth/retirements.png)
 
 How to deploy the monitor workbook ?
 ------------------------------------
