@@ -27,7 +27,7 @@
             },
             "defaultValue": "value::all",
             "value": [
-              "/subscriptions/ebb79bc0-aa86-44a7-8111-cabbe0c43993"
+              "value::all"
             ]
           }
         ],
