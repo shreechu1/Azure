@@ -1,0 +1,107 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 12,
+        "content": {
+          "version": "NotebookGroup/1.0",
+          "groupType": "editable",
+          "items": [
+            {
+              "type": 9,
+              "content": {
+                "version": "KqlParameterItem/1.0",
+                "crossComponentResources": [
+                  "value::all"
+                ],
+                "parameters": [
+                  {
+                    "id": "f6212c06-28a4-46cf-9bed-4211a39a2363",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "Subscription",
+                    "type": 6,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "includeAll": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "value": [
+                      "value::all"
+                    ]
+                  },
+                  {
+                    "id": "72e8ab2b-5ab9-4a6a-aae6-4ea3b161c60d",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "RetirementDate",
+                    "type": 2,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "servicehealthresources\r\n| extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))\r\n| where eventType == \"HealthAdvisory\" and description contains \"Retirement\"\r\n| distinct impactMitigationTime",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ]
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "value": [
+                      "value::all"
+                    ]
+                  }
+                ],
+                "style": "pills",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources"
+              },
+              "name": "parameters - 2"
+            },
+            {
+              "type": 12,
+              "content": {
+                "version": "NotebookGroup/1.0",
+                "groupType": "editable",
+                "items": [
+                  {
+                    "type": 3,
+                    "content": {
+                      "version": "KqlItem/1.0",
+                      "query": "servicehealthresources\r\n| extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))\r\n| mv-expand  propvalue = properties.Impact\r\n| extend ImpactedService = propvalue.ImpactedService\r\n| where eventType == \"HealthAdvisory\" and description contains \"Retirement\" and impactMitigationTime in ({RetirementDate})\r\n| project subscriptionId,eventType,impactMitigationTime,ImpactedService,description,properties,format_datetime(impactMitigationTime,'yyyy-dd-MM'),trackingId\r\n| join kind=inner (\r\nresourcecontainers\r\n| where type == 'microsoft.resources/subscriptions'\r\n|project subscriptionId,name\r\n) \r\non subscriptionId\r\n| summarize by RetirementDate = format_datetime(impactMitigationTime,'yyyy-dd-MM'),Subscription_ID=subscriptionId,Subscription_Name = name,Impacted_Service=tostring(ImpactedService),Description=tostring(description),Properties=tostring(properties),Tracking_ID=tostring(trackingId)",
+                      "size": 0,
+                      "noDataMessage": "There are no service retirements detected on this Subscription for the selected Date",
+                      "noDataMessageStyle": 3,
+                      "queryType": 1,
+                      "resourceType": "microsoft.resourcegraph/resources",
+                      "crossComponentResources": [
+                        "{Subscription}"
+                      ]
+                    },
+                    "name": "query - 0"
+                  }
+                ]
+              },
+              "name": "group - 1"
+            }
+          ]
+        },
+        "name": "group - 0"
+      }
+    ],
+    "fallbackResourceIds": [
+      "Azure Monitor"
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }
