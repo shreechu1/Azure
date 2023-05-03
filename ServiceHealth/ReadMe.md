@@ -14,28 +14,28 @@ Service Health events
 
 Using [Azure Resource Graph](https://learn.microsoft.com/en-us/azure/governance/resource-graph/overview) , you now programatically query the Service health events for your subscriptions.
 
-Service issues - Problems in the Azure services that affect you right now.
+1. Service issues - Problems in the Azure services that affect you right now.
     
     ServiceHealthResources
     | where type =~ 'Microsoft.ResourceHealth/events'
     | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
     | where eventType == 'ServiceIssue'
 
-Planned maintenance - Upcoming maintenance that can affect the availability of your services in the future.
+2. Planned maintenance - Upcoming maintenance that can affect the availability of your services in the future.
 
     ServiceHealthResources
     | where type =~ 'Microsoft.ResourceHealth/events'
     | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
     | where eventType == 'PlannedMaintenance
 
-Health advisories - Changes in Azure services that require your attention. Examples include deprecation of Azure features or upgrade requirements (e.g upgrade to a supported PHP framework)
+3. Health advisories - Changes in Azure services that require your attention. Examples include deprecation of Azure features or upgrade requirements (e.g upgrade to a supported PHP framework)
 
     ServiceHealthResources
     | where type =~ 'Microsoft.ResourceHealth/events'
     | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
     | where eventType == 'HealthAdvisory’
 
-Retirement Notices - Provides a quick view of all Azure retirements notices detected on the scoped subscriptions based on date parameter
+4. Retirement Notices - Provides a quick view of all Azure retirements notices detected on the scoped subscriptions based on date parameter
 
 KQL Query with date parameter
 -----------------------------
