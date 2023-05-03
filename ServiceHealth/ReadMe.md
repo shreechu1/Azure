@@ -35,7 +35,41 @@ Health advisories - Changes in Azure services that require your attention. Examp
     | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
     | where eventType == 'HealthAdvisory’
 
-Retirement Notices - Provides a quick view of Azure retirements based on selcted date filters
+Retirement Notices - Provides a quick view of all Azure retirements notices detected on the scoped subscriptions based on date parameter
+
+KQL Query with date parameter
+-----------------------------
+
+    servicehealthresources
+    | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
+    | mv-expand  propvalue = properties.Impact
+    | extend ImpactedService = propvalue.ImpactedService
+    | where eventType == "HealthAdvisory" and description contains "Retirement" and impactMitigationTime in ({RetirementDate})
+    | project subscriptionId,eventType,impactMitigationTime,ImpactedService,description,properties,format_datetime(impactMitigationTime,'yyyy-dd-MM'),trackingId
+    | join kind=inner (
+    resourcecontainers
+    | where type == 'microsoft.resources/subscriptions'
+    |project subscriptionId,name
+    ) 
+    on subscriptionId
+    | summarize by Retirement_Date=format_datetime(impactMitigationTime,'yyyy-dd-MM'),Subscription_ID=subscriptionId,Subscription_Name=name,Impacted_Service=tostring(ImpactedService),Description=tostring(description),Properties=tostring(properties),Tracking_ID=tostring(trackingId)
+
+KQL Query without date parameter
+--------------------------------
+
+    servicehealthresources
+    | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
+    | mv-expand  propvalue = properties.Impact
+    | extend ImpactedService = propvalue.ImpactedService
+    | where eventType == "HealthAdvisory" and description contains "Retirement"
+    | project subscriptionId,eventType,impactMitigationTime,ImpactedService,description,properties,format_datetime(impactMitigationTime,'yyyy-dd-MM'),trackingId
+    | join kind=inner (
+    resourcecontainers
+    | where type == 'microsoft.resources/subscriptions'
+    |project subscriptionId,name
+    ) 
+    on subscriptionId
+    | summarize by Retirement_Date=format_datetime(impactMitigationTime,'yyyy-dd-MM'),Subscription_ID=subscriptionId,Subscription_Name=name,Impacted_Service=tostring(ImpactedService),Description=tostring(description),Properties=tostring(properties),Tracking_ID=tostring(trackingId)  
 
 ![Sample screenshot of retirements](/ServiceHealth/retirements.png))
 
