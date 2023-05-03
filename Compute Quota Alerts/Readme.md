@@ -22,4 +22,8 @@ Logic
 Since there's no direct way to alert for a quota breach. This automation explains a custom way to query for compute quota usage using a powershell script using Azure automation account, Ingest the data to a custom log analytics workspace which is then used to create dymanic alerts for necessary threshold. 
 
 Prerequities - 
-Since we will have an automation account that periodically fires the powershell script, this scripts needs to be executed as a "Run as" account
+Since we will have an automation account that periodically fires the powershell script, this scripts needs to be executed using a "Run as" account
+
+Create a Service Principle
+--------------------------
+
