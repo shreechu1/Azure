@@ -35,6 +35,9 @@ Health advisories - Changes in Azure services that require your attention. Examp
     | extend eventType = properties.EventType, status = properties.Status, description = properties.Title, trackingId = properties.TrackingId, summary = properties.Summary, priority = properties.Priority, impactStartTime = properties.ImpactStartTime, impactMitigationTime = todatetime(tolong(properties.ImpactMitigationTime))
     | where eventType == 'HealthAdvisory’
 
+Retirement Notices - Provides a quick view of Azure retirements based on selcted date filters
+
+![Sample screenshot of retirements](/ServiceHealth/retirements.png))
 
 How to deploy the monitor workbook ?
 ------------------------------------
